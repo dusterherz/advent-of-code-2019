@@ -19,8 +19,11 @@ No parameters should be necessary. If something is necessary as an input, a READ
 
 ## Completion
 
-- [] Day 1
+- [x] Day 1
+  - [x] Step 1
+  - [x] Step 2
 - [] Day 2
+  - [x] Step 1
 - [] Day 3
 - [] Day 4
 - [] Day 5
