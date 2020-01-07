@@ -8,49 +8,54 @@ def get_data():
 
 def getDelta(direction):
     dxy = {
-        'U': (1, 0),
-        'D': (-1, 0),
-        'L': (0, -1),
-        'R': (0, 1),
+        'U': (0, 1),
+        'D': (0, -1),
+        'L': (-1, 0),
+        'R': (1, 0),
     }
     return dxy[direction]
 
 
 def convert_wires_to_map(wires):
-    map = [[0 for i in range(9000)] for j in range(9000)]
-    for wire in wires:
+    map = {}
+    for wire_i, wire in enumerate(wires):
         x = 0
         y = 0
         for path in wire:
             direction = path[:1]
             distance = int(path[1:])
-            dx, dy = getDelta(direction)
-            if dx:
-                for i in range(x + dx, x + (dx * (distance)), dx):
-                    map[i][y] += 1
-                x = x + (dx * distance) 
-            if dy:
-                for j in range(y + dy, y + (dy * (distance)), dy):
-                    map[x][j] += 1
-                y = y + (dy * distance)
-                if x < 0 or y < 0: print('FUUUUUUCK')
-            map[x][y] += 1
+            dy, dx = getDelta(direction)
+            if dx != 0:
+                for i in range(x, x + distance * dx, dx):
+                    if not (i, y) in map:
+                        map[(i, y)] = wire_i
+                    elif map[(i, y)] != wire_i:
+                        map[(i, y)] = 'x'
+                x += distance * dx
+            if dy != 0:
+                for i in range(y, y + distance * dy, dy):
+                    if not (x, i) in map:
+                        map[(x, i)] = wire_i
+                    elif map[(x, i)] != wire_i:
+                        map[(x, i)] = 'x'
+                y += distance * dy
     return map
+
 
 def find_all_junctions_distances(map):
     junctions = []
-    for x, line in enumerate(map):
-        for y, value in enumerate(line):
-            if value >= 2:
-                junctions.append((x, y))
+    for (x, y), value in map.items():
+        if value == "x":
+            junctions.append({'x': x, 'y': y, 'distance': abs(x) + abs(y)})
     return junctions
+
 
 def main():
     wires = get_data()
     map = convert_wires_to_map(wires)
     junctions = find_all_junctions_distances(map)
-    print(junctions)
-    print(min(junctions))
+    junctions.sort(key=lambda item: item['distance'])
+    print(junctions[1])  # First match is 0, 0
 
 
 if __name__ == "__main__":
