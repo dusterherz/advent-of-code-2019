@@ -66,7 +66,7 @@ def convert_wires_to_map(wires):
 def find_all_junctions_distances(map):
     junctions = []
     for (x, y), value in map.items():
-        if value['intersection'] == True:
+        if value['intersection'] is True:
             junctions.append({
                 'x': x,
                 'y': y,
